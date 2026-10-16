@@ -2,7 +2,7 @@
 
 import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
-import { products } from "@/lib/products";
+import { displayName, products } from "@/lib/products";
 import { formatPrice, shop } from "@/lib/shop";
 import { useShop } from "@/lib/store";
 import { Collection } from "./sections/Collection";
@@ -75,7 +75,7 @@ export function Shop() {
             >
               <span aria-hidden className="h-8 w-8 rounded-full ring-1 ring-white/15" style={{ background: product.color }} />
               <span className="text-sm leading-tight">
-                {product.name}
+                {displayName(product)}
                 <span className="block text-xs text-mute">{formatPrice(product.price)}</span>
               </span>
             </button>

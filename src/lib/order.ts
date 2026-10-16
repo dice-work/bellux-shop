@@ -1,4 +1,4 @@
-import { products } from "./products";
+import { displayName, products } from "./products";
 import { formatPrice, shop } from "./shop";
 import type { CartItem } from "./store";
 
@@ -19,7 +19,7 @@ export function buildOrderMessage(items: CartItem[]) {
     "",
     ...lines.map(
       (line, i) =>
-        `${i + 1}. ${line.product.name} | ไซซ์ ${line.size} | ${line.qty} ตัว | ${formatPrice(line.subtotal)}`,
+        `${i + 1}. ${displayName(line.product)} | ไซซ์ ${line.size} | ${line.qty} ตัว | ${formatPrice(line.subtotal)}`,
     ),
     "",
     `รวม ${count} ตัว: ${formatPrice(total)} (ยังไม่รวมค่าจัดส่ง)`,

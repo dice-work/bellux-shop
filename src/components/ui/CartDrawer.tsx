@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { buildOrderMessage, cartLines } from "@/lib/order";
+import { displayName } from "@/lib/products";
 import { formatPrice, shop } from "@/lib/shop";
 import { useShop } from "@/lib/store";
 
@@ -76,7 +77,7 @@ export function CartDrawer() {
                 <li key={`${line.productId}-${line.size}`} className="flex items-center gap-4 py-4">
                   <span className="h-12 w-9 shrink-0 rounded-md ring-1 ring-white/10" style={{ background: line.product.color }} />
                   <div className="min-w-0 flex-1">
-                    <p className="truncate text-sm">{line.product.name}</p>
+                    <p className="truncate text-sm">{displayName(line.product)}</p>
                     <p className="text-xs text-mute">
                       ไซซ์ {line.size} · {formatPrice(line.product.price)}
                     </p>
@@ -84,7 +85,7 @@ export function CartDrawer() {
                   <div className="flex items-center rounded-full border border-white/12 text-sm">
                     <button
                       type="button"
-                      aria-label={`ลดจำนวน ${line.product.name}`}
+                      aria-label={`ลดจำนวน ${displayName(line.product)}`}
                       onClick={() => setQty(line.productId, line.size, line.qty - 1)}
                       className="h-8 w-8 text-mute hover:text-fg"
                     >
@@ -93,7 +94,7 @@ export function CartDrawer() {
                     <span className="w-5 text-center">{line.qty}</span>
                     <button
                       type="button"
-                      aria-label={`เพิ่มจำนวน ${line.product.name}`}
+                      aria-label={`เพิ่มจำนวน ${displayName(line.product)}`}
                       onClick={() => setQty(line.productId, line.size, line.qty + 1)}
                       className="h-8 w-8 text-mute hover:text-fg"
                     >

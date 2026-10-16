@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { products, type Product } from "@/lib/products";
+import { displayName, products, type Product } from "@/lib/products";
 import { formatPrice } from "@/lib/shop";
 import { useShop, type CartToast as Toast } from "@/lib/store";
 import { Sparkle } from "./Sparkle";
@@ -33,7 +33,7 @@ function ToastCard({ toast, product }: { toast: Toast; product: Product }) {
       <div className="min-w-0 flex-1">
         <p className="text-sm font-medium">เพิ่มลงตะกร้าแล้ว</p>
         <p className="truncate text-xs text-mute">
-          {product.name} · ไซซ์ {toast.size} · {formatPrice(product.price)}
+          {displayName(product)} · ไซซ์ {toast.size} · {formatPrice(product.price)}
         </p>
       </div>
       <button

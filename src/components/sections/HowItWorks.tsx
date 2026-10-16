@@ -1,4 +1,4 @@
-import { products, sizes } from "@/lib/products";
+import { displayName, products, sizes } from "@/lib/products";
 import { formatPrice } from "@/lib/shop";
 import { Reveal } from "../ui/Reveal";
 import { SectionHeading } from "../ui/SectionHeading";
@@ -15,7 +15,7 @@ function FitList() {
           }`}
         >
           <span className="h-2.5 w-2.5 rounded-full" style={{ background: product.color }} />
-          {product.name}
+          {displayName(product)}
         </li>
       ))}
     </ul>
@@ -59,7 +59,7 @@ function ChatPreview() {
         <span className="h-2 w-2 rounded-full bg-white/20" />
       </div>
       <p className="text-fg">ขอสั่งซื้อสินค้า</p>
-      <p>1. {products[0].name} | ไซซ์ 27 | 1 ตัว</p>
+      <p>1. {displayName(products[0])} | ไซซ์ 27 | 1 ตัว</p>
       <p>รวม: {formatPrice(products[0].price)}</p>
       <p className="text-white/40">ชื่อผู้รับ: _</p>
     </div>

@@ -1,5 +1,8 @@
 @import "tailwindcss";
 
+/* จอกว้างและสูงพอที่แผงสินค้าจะแสดงรายละเอียดครบโดยไม่ดันปุ่มเพิ่มลงตะกร้าตกจอ */
+@custom-variant tall (@media (min-width: 640px) and (min-height: 860px));
+
 @theme inline {
   --color-night: #050506;
   --color-ash: #0e0e11;
