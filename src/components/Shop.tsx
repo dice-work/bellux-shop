@@ -2,7 +2,7 @@
 
 import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
-import { displayName, products } from "@/lib/products";
+import { products } from "@/lib/products";
 import { formatPrice, shop } from "@/lib/shop";
 import { useShop } from "@/lib/store";
 import { Collection } from "./sections/Collection";
@@ -61,25 +61,31 @@ export function Shop() {
 
         <nav
           aria-label="เลือกสินค้าในโชว์รูม"
-          className={`absolute inset-x-0 bottom-0 z-10 flex gap-2 overflow-x-auto px-5 pb-6 transition duration-500 sm:justify-center ${
+          className={`absolute inset-x-0 bottom-0 z-10 overflow-x-auto px-5 pb-6 transition duration-500 ${
             browsing ? "opacity-100" : "pointer-events-none opacity-0"
           }`}
         >
-          {products.map((product) => (
-            <button
-              key={product.id}
-              type="button"
-              tabIndex={browsing ? 0 : -1}
-              onClick={() => select(product.id)}
-              className="glass flex shrink-0 items-center gap-3 rounded-full py-1.5 pr-4 pl-1.5 text-left transition hover:border-white/25"
-            >
-              <span aria-hidden className="h-8 w-8 rounded-full ring-1 ring-white/15" style={{ background: product.color }} />
-              <span className="text-sm leading-tight">
-                {displayName(product)}
-                <span className="block text-xs text-mute">{formatPrice(product.price)}</span>
-              </span>
-            </button>
-          ))}
+          {/* w-max + mx-auto: จัดกลางเมื่อพอดีจอ และเลื่อนดูได้ครบเมื่อยาวเกินจอ (justify-center จะตัดตัวแรกทิ้ง) */}
+          <div className="mx-auto flex w-max gap-2">
+            {products.map((product) => (
+              <button
+                key={product.id}
+                type="button"
+                tabIndex={browsing ? 0 : -1}
+                onClick={() => select(product.id)}
+                className="glass flex shrink-0 items-center gap-3 rounded-full py-1.5 pr-4 pl-1.5 text-left transition hover:border-white/25"
+              >
+                <span aria-hidden className="h-8 w-8 rounded-full ring-1 ring-white/15" style={{ background: product.color }} />
+                <span className="text-sm leading-tight">
+                  {product.name}
+                  <span className="block text-xs text-mute">
+                    {product.variantName ? `${product.variantName} · ` : ""}
+                    {formatPrice(product.price)}
+                  </span>
+                </span>
+              </button>
+            ))}
+          </div>
         </nav>
 
         <div className="pointer-events-none absolute inset-x-0 bottom-0 h-40 bg-linear-to-b from-transparent to-night" />

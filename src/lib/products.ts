@@ -22,9 +22,11 @@ export type Product = {
   // ภาพสินค้า 2D สำหรับการ์ด (path ใน public/) ถ้าไม่มีจะวาดภาพทรงกางเกงแทน
   // background คือสีพื้นของภาพ ใช้เป็นพื้นการ์ดให้กลืนเป็นแผ่นเดียว
   image?: { src: string; width: number; height: number; alt: string; background: string };
-  // ทรงเดียวกันหลายสี: ใส่ style เดียวกัน และตั้งชื่อสีใน colorName
+  // ทรงเดียวกันหลายแบบ: ใส่ style เดียวกัน ตั้งชื่อแบบใน variantName
+  // variantType บอกว่าต่างกันที่สี (แสดงเป็นจุดสี) หรือดีเทล (แสดงเป็นปุ่มข้อความ)
   style?: string;
-  colorName?: string;
+  variantName?: string;
+  variantType?: "color" | "detail";
 };
 
 export const sizes = ["24", "25", "26", "27", "28", "29", "30", "32"];
@@ -54,7 +56,8 @@ export const products: Product[] = [
     id: "belleux-greige",
     style: "belleux",
     name: "Bellux Double Waist",
-    colorName: "Greige Wash",
+    variantName: "Greige Wash",
+    variantType: "color",
     fitLabel: "เอวสูงสองชั้น ขากว้าง",
     price: 2690,
     color: "#8a7d68",
@@ -76,7 +79,8 @@ export const products: Product[] = [
     id: "belleux-black-gray",
     style: "belleux",
     name: "Bellux Double Waist",
-    colorName: "Black Gray",
+    variantName: "Black Gray",
+    variantType: "color",
     fitLabel: "เอวสูงสองชั้น ขากว้าง",
     price: 2690,
     color: "#3a3a3c",
@@ -94,13 +98,57 @@ export const products: Product[] = [
       background: "#fcfcf9",
     },
   },
+  {
+    id: "black-bootcut-plain",
+    style: "black-bootcut",
+    name: "Black Lace Bootcut",
+    variantName: "แบบเรียบ",
+    variantType: "detail",
+    fitLabel: "เอวต่ำ ขาม้า",
+    price: 2390,
+    color: "#2a2a2c",
+    stitch: "#6f6f74",
+    description: "เอวต่ำ ทรงขาม้าบานยาวคลุมรองเท้า สีดำฟอก และลูกไม้ดอกไม้ใต้กระเป๋าหลังขาด",
+    details: ["สีดำฟอก", "เอวต่ำ ขาม้าบาน", "ลูกไม้ดอกไม้ที่กระเป๋าหลัง", "ด้านข้างเรียบ ไม่แต่งหมุด"],
+    fit: { thigh: 0.11, knee: 0.095, hem: 0.14, length: 1 },
+    model: "/models/black-bootcut-plain.glb",
+    image: {
+      src: "/products/black-bootcut-plain.webp",
+      width: 1132,
+      height: 1390,
+      alt: "กางเกงยีนส์ Black Lace Bootcut แบบเรียบ ด้านหน้าและด้านหลัง",
+      background: "#f8f6f3",
+    },
+  },
+  {
+    id: "black-bootcut-studded",
+    style: "black-bootcut",
+    name: "Black Lace Bootcut",
+    variantName: "แต่งหมุดข้าง",
+    variantType: "detail",
+    fitLabel: "เอวต่ำ ขาม้า",
+    price: 2590,
+    color: "#2a2a2c",
+    stitch: "#6f6f74",
+    description: "เอวต่ำ ทรงขาม้าบานยาวคลุมรองเท้า สีดำฟอก ลูกไม้ใต้กระเป๋าหลังขาด และแถบหมุดสีกันเมทัลตลอดตะเข็บข้าง",
+    details: ["สีดำฟอก", "เอวต่ำ ขาม้าบาน", "ลูกไม้ดอกไม้ที่กระเป๋าหลัง", "แถบหมุดกันเมทัลตลอดตะเข็บข้าง"],
+    fit: { thigh: 0.11, knee: 0.095, hem: 0.14, length: 1 },
+    model: "/models/black-bootcut-studded.glb",
+    image: {
+      src: "/products/black-bootcut-studded.webp",
+      width: 1132,
+      height: 1390,
+      alt: "กางเกงยีนส์ Black Lace Bootcut แต่งหมุดตลอดตะเข็บข้าง ด้านหน้าและด้านหลัง",
+      background: "#faf9f6",
+    },
+  },
 ];
 
 export const displayName = (product: Product) =>
-  product.colorName ? `${product.name} (${product.colorName})` : product.name;
+  product.variantName ? `${product.name} (${product.variantName})` : product.name;
 
-// สินค้าทุกสีของทรงเดียวกัน (สินค้าที่ไม่มี style ถือเป็นทรงเดี่ยว)
-export const colorways = (product: Product) =>
+// สินค้าทุกแบบของทรงเดียวกัน (สินค้าที่ไม่มี style ถือเป็นทรงเดี่ยว)
+export const variantsOf = (product: Product) =>
   product.style ? products.filter((p) => p.style === product.style) : [product];
 
 // รวมสินค้าเป็นกลุ่มตามทรง เรียงตามลำดับที่ปรากฏครั้งแรก
@@ -111,5 +159,5 @@ export const productStyles = () => {
     if (seen.has(key)) return false;
     seen.add(key);
     return true;
-  }).map(colorways);
+  }).map(variantsOf);
 };

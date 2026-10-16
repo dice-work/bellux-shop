@@ -8,6 +8,7 @@ import { showInShowroom } from "@/lib/showroom";
 import { JeansSilhouette } from "../ui/JeansSilhouette";
 import { Reveal } from "../ui/Reveal";
 import { SectionHeading } from "../ui/SectionHeading";
+import { VariantPicker } from "../ui/VariantPicker";
 
 function ProductVisual({ colors, active, featured }: { colors: Product[]; active: Product; featured: boolean }) {
   const photos = colors.filter((p) => p.image);
@@ -16,7 +17,7 @@ function ProductVisual({ colors, active, featured }: { colors: Product[]; active
     // โหลดภาพทุกสีไว้ซ้อนกันแล้วสลับด้วย opacity จะได้ไม่เห็นภาพว่างตอนกดเปลี่ยนสี
     return (
       <div
-        className={`grid place-items-center transition-colors duration-500 ${featured ? "p-6 sm:p-10" : "p-5"}`}
+        className={`grid place-items-center transition-colors duration-500 ${featured ? "p-6 sm:p-10" : "h-80 p-5"}`}
         style={{ background: active.image.background }}
       >
         {photos.map((p) => (
@@ -28,7 +29,9 @@ function ProductVisual({ colors, active, featured }: { colors: Product[]; active
             alt={p.id === active.id ? p.image!.alt : ""}
             aria-hidden={p.id !== active.id}
             sizes={featured ? "(min-width: 1024px) 560px, 100vw" : "(min-width: 1024px) 380px, 100vw"}
-            className={`col-start-1 row-start-1 mx-auto h-auto max-h-[560px] w-auto transition duration-500 group-hover:scale-[1.02] ${
+            className={`col-start-1 row-start-1 mx-auto h-auto w-auto transition duration-500 group-hover:scale-[1.02] ${
+              featured ? "max-h-[560px]" : "max-h-[280px]"
+            } ${
               p.id === active.id ? "opacity-100" : "opacity-0"
             }`}
           />
@@ -66,26 +69,7 @@ function StyleCard({ colors, featured, index }: { colors: Product[]; featured: b
           <p className={featured ? "mt-4 text-2xl" : "mt-3 text-sm"}>{formatPrice(active.price)}</p>
         </div>
         {colors.length > 1 && (
-          <div>
-            <p className="text-xs text-mute">
-              {colors.length} สี: <span className="text-fg">{active.colorName}</span>
-            </p>
-            <div className="mt-2.5 flex gap-2.5">
-              {colors.map((option) => (
-                <button
-                  key={option.id}
-                  type="button"
-                  aria-label={`ดูสี ${option.colorName}`}
-                  aria-pressed={option.id === active.id}
-                  onClick={() => setActive(option)}
-                  className={`h-8 w-8 rounded-full ring-1 ring-white/15 transition ${
-                    option.id === active.id ? "ring-2 ring-white ring-offset-2 ring-offset-night" : "hover:ring-white/45"
-                  }`}
-                  style={{ background: option.color }}
-                />
-              ))}
-            </div>
-          </div>
+          <VariantPicker options={colors} activeId={active.id} onPick={setActive} offsetClass="ring-offset-night" />
         )}
         {featured && (
           <>

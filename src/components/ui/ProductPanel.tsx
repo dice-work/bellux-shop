@@ -1,15 +1,16 @@
 "use client";
 
 import { useState } from "react";
-import { colorways, products, sizes, type Product } from "@/lib/products";
+import { products, sizes, variantsOf, type Product } from "@/lib/products";
 import { formatPrice } from "@/lib/shop";
 import { useShop } from "@/lib/store";
+import { VariantPicker } from "./VariantPicker";
 
 function PanelBody({ product, index }: { product: Product; index: number }) {
   const [size, setSize] = useState<string | null>(null);
   const select = useShop((state) => state.select);
   const addItem = useShop((state) => state.addItem);
-  const colors = colorways(product);
+  const variants = variantsOf(product);
   const step = (offset: number) =>
     select(products[(index + offset + products.length) % products.length].id);
   const iconButton = "grid h-9 w-9 place-items-center rounded-full border border-white/10 text-mute transition hover:border-white/30 hover:text-fg";
@@ -35,27 +36,15 @@ function PanelBody({ product, index }: { product: Product; index: number }) {
 
       <h2 className="text-chrome mt-4 text-3xl font-semibold tracking-tight sm:mt-7 sm:text-4xl">{product.name}</h2>
       <p className="mt-1.5 text-sm text-mute">{product.fitLabel}</p>
-      {colors.length > 1 && (
-        <fieldset className="mt-4 sm:mt-5">
-          <legend className="text-xs text-mute">
-            สี: <span className="text-fg">{product.colorName}</span>
-          </legend>
-          <div className="mt-2.5 flex gap-2.5">
-            {colors.map((option) => (
-              <button
-                key={option.id}
-                type="button"
-                aria-label={option.colorName}
-                aria-pressed={option.id === product.id}
-                onClick={() => select(option.id)}
-                className={`h-9 w-9 rounded-full ring-1 ring-white/15 transition ${
-                  option.id === product.id ? "ring-2 ring-white ring-offset-2 ring-offset-ash" : "hover:ring-white/45"
-                }`}
-                style={{ background: option.color }}
-              />
-            ))}
-          </div>
-        </fieldset>
+      {variants.length > 1 && (
+        <div className="mt-4 sm:mt-5">
+          <VariantPicker
+            options={variants}
+            activeId={product.id}
+            onPick={(option) => select(option.id)}
+            offsetClass="ring-offset-ash"
+          />
+        </div>
       )}
       <p className="mt-3 text-xl sm:mt-5">{formatPrice(product.price)}</p>
 
