@@ -28,7 +28,7 @@ export function SiteFooter() {
         aria-hidden
         className="mt-10 -mb-[0.2em] bg-linear-to-b from-white/60 via-white/20 to-transparent bg-clip-text text-center text-[19vw] leading-none font-semibold tracking-tighter text-transparent select-none lg:text-[12.5rem]"
       >
-        {shop.name.split(" ")[0]}
+        {shop.name}
       </p>
     </footer>
   );
