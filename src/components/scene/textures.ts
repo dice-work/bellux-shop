@@ -60,3 +60,15 @@ export function glowTexture() {
     ctx.fillRect(0, 0, size, size);
   });
 }
+
+// ฉากหลังสตูดิโอถ่ายสินค้า: เทาอ่อนตรงกลาง ไล่เข้มที่ขอบให้กลืนกับหน้าเว็บสีดำ
+export function studioTexture() {
+  return canvasTexture(512, (ctx, size) => {
+    const light = ctx.createRadialGradient(size / 2, size * 0.45, 0, size / 2, size * 0.45, size * 0.62);
+    light.addColorStop(0, "#e4e4e7");
+    light.addColorStop(0.45, "#b4b4ba");
+    light.addColorStop(1, "#2a2a2e");
+    ctx.fillStyle = light;
+    ctx.fillRect(0, 0, size, size);
+  });
+}

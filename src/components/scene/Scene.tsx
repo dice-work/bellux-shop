@@ -8,7 +8,9 @@ import { products } from "@/lib/products";
 import { useShop } from "@/lib/store";
 import { Boutique } from "./Boutique";
 import { RackItem } from "./RackItem";
-import { FRONT_Z, rackX } from "./layout";
+import { jeansHeight } from "./Jeans";
+import { FRONT_Z, SELECTED_LIFT, WAIST_Y, rackX } from "./layout";
+import { Studio } from "./Studio";
 
 // มุมกล้อง 2 แบบ: มองทั้งร้าน และซูมเข้าหาตัวที่เลือก โดยเว้นที่ให้แผงรายละเอียดสินค้า
 function CameraRig() {
@@ -26,16 +28,26 @@ function CameraRig() {
 
     if (index >= 0) {
       const x = rackX(index);
+      // ขอบเขตจริงของตัวที่หยิบออกมา: จากหัวไม้แขวนถึงปลายขา
+      const waist = WAIST_Y + SELECTED_LIFT;
+      const top = waist + 0.17;
+      const bottom = waist - jeansHeight(products[index].fit);
+      const center = (top + bottom) / 2;
+      const span = top - bottom;
       if (portrait) {
-        const distance = 6.8;
-        const y = 0.88 - distance * tan * 0.44;
+        // มือถือ: วางทั้งตัวไว้ระหว่าง header (บน ~12%) กับแผงสินค้า (ล่าง ~46%)
+        const regionTop = 0.12;
+        const regionBottom = 0.53;
+        const visible = span / ((regionBottom - regionTop) * 0.9);
+        const distance = visible / (2 * tan);
+        const y = center - (0.5 - (regionTop + regionBottom) / 2) * visible;
         lookGoal.current.set(x, y, FRONT_Z);
         goal.current.set(x, y + 0.1, FRONT_Z + distance);
       } else {
-        const distance = 3.9;
+        const distance = Math.max(3.9, span / (0.78 * 2 * tan));
         const shift = distance * tan * aspect * 0.36;
-        lookGoal.current.set(x + shift, 0.88, FRONT_Z);
-        goal.current.set(x + shift, 0.98, FRONT_Z + distance);
+        lookGoal.current.set(x + shift, center, FRONT_Z);
+        goal.current.set(x + shift, center + 0.1, FRONT_Z + distance);
       }
     } else {
       const halfWidth = portrait ? 2.15 : 3.3;
@@ -101,6 +113,7 @@ export default function Scene({ onReady }: { onReady: () => void }) {
         <Lightformer form="rect" intensity={0.8} position={[0, 3, 8]} scale={[12, 3, 1]} />
       </Environment>
       <CameraRig />
+      <Studio />
       <Ready onReady={onReady} />
       <Boutique />
       {products.map((product, index) => (

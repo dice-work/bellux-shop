@@ -4,6 +4,7 @@ import { Float, RoundedBox } from "@react-three/drei";
 import { useMemo } from "react";
 import * as THREE from "three";
 import { products } from "@/lib/products";
+import { useShop } from "@/lib/store";
 import { FRONT_Z, RACK_Y, SPACING } from "./layout";
 import { beamTexture, floorLinesTexture, glowTexture } from "./textures";
 
@@ -137,6 +138,8 @@ function Podium() {
 }
 
 export function Boutique() {
+  // ของตกแต่งที่อยู่หน้าฉากสตูดิโอจะโผล่ข้างตัวที่หยิบมาดู จึงซ่อนไว้ระหว่างดูสินค้า
+  const focused = useShop((state) => state.selectedId !== null);
   const arch = useMemo(() => archShape(3.6, 3.3), []);
   const lines = useMemo(() => floorLinesTexture(), []);
   const beam = useMemo(() => beamTexture(), []);
@@ -173,8 +176,10 @@ export function Boutique() {
 
       <Rack />
       <Stars />
-      <Plinth />
-      <Podium />
+      <group visible={!focused}>
+        <Plinth />
+        <Podium />
+      </group>
     </group>
   );
 }

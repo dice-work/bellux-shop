@@ -17,7 +17,7 @@ export function Header() {
 
   return (
     <header className="fixed inset-x-0 top-0 z-20 px-4 pt-4">
-      <div className="glass mx-auto flex max-w-6xl items-center justify-between rounded-full py-2 pr-2 pl-5">
+      <div className="glass mx-auto flex max-w-6xl items-center justify-between rounded-full bg-black/55! py-2 pr-2 pl-5">
         <a
           href="#showroom"
           onClick={() => select(null)}

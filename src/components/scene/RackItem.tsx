@@ -8,7 +8,7 @@ import { displayName, type Product } from "@/lib/products";
 import { formatPrice } from "@/lib/shop";
 import { useShop } from "@/lib/store";
 import { Jeans, jeansHeight } from "./Jeans";
-import { FRONT_Z, WAIST_Y, rackX } from "./layout";
+import { FRONT_Z, SELECTED_LIFT, WAIST_Y, rackX } from "./layout";
 
 const TAU = Math.PI * 2;
 
@@ -66,7 +66,7 @@ export function RackItem({ product, index }: { product: Product; index: number }
     if (!node) return;
     const lift = hovered && !selected ? 0.04 : 0;
     node.position.x = THREE.MathUtils.damp(node.position.x, x, 6, delta);
-    node.position.y = THREE.MathUtils.damp(node.position.y, WAIST_Y + lift + (selected ? 0.08 : 0), 6, delta);
+    node.position.y = THREE.MathUtils.damp(node.position.y, WAIST_Y + lift + (selected ? SELECTED_LIFT : 0), 6, delta);
     node.position.z = THREE.MathUtils.damp(node.position.z, selected ? FRONT_Z : 0, 5, delta);
 
     if (selected) {

@@ -105,7 +105,7 @@ export function ProductPanel() {
   return (
     <aside
       aria-label="รายละเอียดสินค้า"
-      className={`glass absolute inset-x-0 bottom-0 z-10 max-h-[52dvh] overflow-y-auto rounded-t-3xl bg-ash/70! p-5 pb-6 transition duration-500 sm:inset-x-auto sm:top-24 sm:right-6 sm:bottom-6 sm:max-h-none sm:w-[390px] sm:rounded-3xl sm:p-7 ${
+      className={`glass absolute inset-x-0 bottom-0 z-10 max-h-[46dvh] overflow-y-auto rounded-t-3xl bg-ash/70! p-5 pb-6 transition duration-500 sm:inset-x-auto sm:top-24 sm:right-6 sm:bottom-6 sm:max-h-none sm:w-[390px] sm:rounded-3xl sm:p-7 ${
         product ? "translate-y-0 opacity-100" : "pointer-events-none translate-y-6 opacity-0"
       }`}
     >
