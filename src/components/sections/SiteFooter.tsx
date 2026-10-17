@@ -1,7 +1,11 @@
+"use client";
+
+import { useI18n } from "@/i18n/I18nProvider";
 import { shop } from "@/lib/shop";
 import { Sparkle } from "../ui/Sparkle";
 
 export function SiteFooter() {
+  const { t } = useI18n();
   return (
     <footer className="mx-auto mt-16 max-w-6xl px-5">
       <div className="flex flex-col justify-between gap-8 border-t border-white/8 pt-10 sm:flex-row">
@@ -10,13 +14,13 @@ export function SiteFooter() {
             <Sparkle className="h-4 w-4" />
             {shop.name}
           </p>
-          <p className="mt-3 max-w-xs text-sm text-mute">กางเกงยีนส์ทรงสวย เลือกดูแบบ 3D แล้วสั่งผ่านแชตได้ทันที</p>
+          <p className="mt-3 max-w-xs text-sm text-mute">{t.footer.about}</p>
         </div>
         <div className="flex gap-12 text-sm">
           <ul className="space-y-2 text-mute">
-            <li><a href="#how" className="hover:text-fg">วิธีเลือกซื้อ</a></li>
-            <li><a href="#collection" className="hover:text-fg">คอลเลกชัน</a></li>
-            <li><a href="#order" className="hover:text-fg">สั่งซื้อ</a></li>
+            <li><a href="#how" className="hover:text-fg">{t.nav.how}</a></li>
+            <li><a href="#collection" className="hover:text-fg">{t.nav.collection}</a></li>
+            <li><a href="#order" className="hover:text-fg">{t.nav.order}</a></li>
           </ul>
           <ul className="space-y-2 text-mute">
             <li><a href={shop.lineUrl} target="_blank" rel="noreferrer" className="hover:text-fg">LINE</a></li>

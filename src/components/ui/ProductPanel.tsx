@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { products, sizes, variantsOf, type Product } from "@/lib/products";
 import { formatPrice } from "@/lib/shop";
+import { useI18n } from "@/i18n/I18nProvider";
 import { useShop } from "@/lib/store";
 import { VariantPicker } from "./VariantPicker";
 
@@ -10,6 +11,7 @@ function PanelBody({ product, index }: { product: Product; index: number }) {
   const [size, setSize] = useState<string | null>(null);
   const select = useShop((state) => state.select);
   const addItem = useShop((state) => state.addItem);
+  const { t, l } = useI18n();
   const variants = variantsOf(product);
   const step = (offset: number) =>
     select(products[(index + offset + products.length) % products.length].id);
@@ -22,20 +24,20 @@ function PanelBody({ product, index }: { product: Product; index: number }) {
           {String(index + 1).padStart(2, "0")} / {String(products.length).padStart(2, "0")}
         </span>
         <div className="flex items-center gap-1.5">
-          <button type="button" aria-label="ตัวก่อนหน้า" onClick={() => step(-1)} className={iconButton}>
+          <button type="button" aria-label={t.panel.previous} onClick={() => step(-1)} className={iconButton}>
             ←
           </button>
-          <button type="button" aria-label="ตัวถัดไป" onClick={() => step(1)} className={iconButton}>
+          <button type="button" aria-label={t.panel.next} onClick={() => step(1)} className={iconButton}>
             →
           </button>
-          <button type="button" aria-label="กลับไปดูทั้งโชว์รูม" onClick={() => select(null)} className={iconButton}>
+          <button type="button" aria-label={t.panel.close} onClick={() => select(null)} className={iconButton}>
             ✕
           </button>
         </div>
       </div>
 
       <h2 className="text-chrome mt-4 text-3xl font-semibold tracking-tight sm:mt-7 sm:text-4xl">{product.name}</h2>
-      <p className="mt-1.5 text-sm text-mute">{product.fitLabel}</p>
+      <p className="mt-1.5 text-sm text-mute">{l(product.fitLabel)}</p>
       {variants.length > 1 && (
         <div className="mt-4 sm:mt-5">
           <VariantPicker
@@ -48,9 +50,9 @@ function PanelBody({ product, index }: { product: Product; index: number }) {
       )}
       <p className="mt-3 text-xl sm:mt-5">{formatPrice(product.price)}</p>
 
-      <p className="mt-4 text-sm leading-relaxed text-fg/75 sm:mt-6">{product.description}</p>
+      <p className="mt-4 text-sm leading-relaxed text-fg/75 sm:mt-6">{l(product.description)}</p>
       <ul className="mt-4 hidden space-y-1.5 border-t border-white/8 pt-4 text-sm text-mute tall:block">
-        {product.details.map((detail) => (
+        {l(product.details).map((detail) => (
           <li key={detail} className="flex gap-2">
             <span aria-hidden className="text-fg/40">—</span>
             {detail}
@@ -59,7 +61,7 @@ function PanelBody({ product, index }: { product: Product; index: number }) {
       </ul>
 
       <fieldset className="mt-5 sm:mt-7">
-        <legend className="text-xs text-mute">ไซซ์เอว (นิ้ว)</legend>
+        <legend className="text-xs text-mute">{t.panel.size}</legend>
         <div className="mt-3 flex flex-wrap gap-2">
           {sizes.map((option) => (
             <button
@@ -90,21 +92,22 @@ function PanelBody({ product, index }: { product: Product; index: number }) {
         }}
         className="btn-primary mt-6 w-full py-3!"
       >
-        {size ? "เพิ่มลงตะกร้า" : "เลือกไซซ์ก่อน"}
+        {size ? t.panel.add : t.panel.pickSize}
       </button>
-      <p className="mt-3 text-center text-xs text-mute">ลากบนฉากเพื่อหมุนดูรอบตัว</p>
+      <p className="mt-3 text-center text-xs text-mute">{t.panel.dragHint}</p>
     </>
   );
 }
 
 export function ProductPanel() {
+  const { t } = useI18n();
   const selectedId = useShop((state) => state.selectedId);
   const index = products.findIndex((product) => product.id === selectedId);
   const product = products[index];
 
   return (
     <aside
-      aria-label="รายละเอียดสินค้า"
+      aria-label={t.panel.label}
       className={`glass absolute inset-x-0 bottom-0 z-10 max-h-[46dvh] overflow-y-auto rounded-t-3xl bg-ash/70! p-5 pb-6 transition duration-500 sm:inset-x-auto sm:top-24 sm:right-6 sm:bottom-6 sm:max-h-none sm:w-[390px] sm:rounded-3xl sm:p-7 ${
         product ? "translate-y-0 opacity-100" : "pointer-events-none translate-y-6 opacity-0"
       }`}

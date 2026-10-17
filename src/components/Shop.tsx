@@ -2,6 +2,7 @@
 
 import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
+import { useI18n } from "@/i18n/I18nProvider";
 import { products } from "@/lib/products";
 import { formatPrice, shop } from "@/lib/shop";
 import { useShop } from "@/lib/store";
@@ -21,6 +22,7 @@ export function Shop() {
   const select = useShop((state) => state.select);
   const browsing = selectedId === null;
   const [ready, setReady] = useState(false);
+  const { t, l } = useI18n();
 
   useEffect(() => {
     void useShop.persist.rehydrate();
@@ -30,14 +32,14 @@ export function Shop() {
     <main className="relative overflow-x-clip">
       <Header />
 
-      <section id="showroom" aria-label="โชว์รูม 3D" className="relative h-dvh min-h-[620px] overflow-clip">
+      <section id="showroom" aria-label={t.hero.showroom} className="relative h-dvh min-h-[620px] overflow-clip">
         <div className="grid-bg pointer-events-none absolute inset-0 opacity-60" />
         <div className={`absolute inset-0 transition-opacity duration-1000 ${ready ? "opacity-100" : "opacity-0"}`}>
           <Scene onReady={() => setReady(true)} />
         </div>
         {!ready && (
           <p role="status" className="absolute inset-0 grid place-items-center text-xs text-mute">
-            กำลังเปิดโชว์รูม
+            {t.hero.loading}
           </p>
         )}
 
@@ -53,14 +55,14 @@ export function Shop() {
           </span>
           <h1 className="text-chrome mx-auto mt-4 max-w-3xl text-[2rem] leading-[1.15] font-semibold tracking-tight text-balance sm:text-5xl">
             {/* ภาษาไทยไม่มีเว้นวรรคระหว่างคำ จึงแบ่งวลีเองเพื่อไม่ให้ตัดกลางคำ */}
-            <span className="inline-block">เดินเลือกยีนส์ตัวโปรด</span>{" "}
-            <span className="inline-block">ในโชว์รูม 3D</span>
+            <span className="inline-block">{t.hero.title[0]}</span>{" "}
+            <span className="inline-block">{t.hero.title[1]}</span>
           </h1>
-          <p className="mt-3 text-sm text-mute">แตะกางเกงบนราวเพื่อหยิบมาหมุนดูรอบตัว</p>
+          <p className="mt-3 text-sm text-mute">{t.hero.hint}</p>
         </div>
 
         <nav
-          aria-label="เลือกสินค้าในโชว์รูม"
+          aria-label={t.hero.chips}
           className={`absolute inset-x-0 bottom-0 z-10 overflow-x-auto px-5 pb-6 transition duration-500 ${
             browsing ? "opacity-100" : "pointer-events-none opacity-0"
           }`}
@@ -79,7 +81,7 @@ export function Shop() {
                 <span className="text-sm leading-tight">
                   {product.name}
                   <span className="block text-xs text-mute">
-                    {product.variantName ? `${product.variantName} · ` : ""}
+                    {product.variantName ? `${l(product.variantName)} · ` : ""}
                     {formatPrice(product.price)}
                   </span>
                 </span>

@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { useState } from "react";
+import { useI18n } from "@/i18n/I18nProvider";
 import { productStyles, type Product } from "@/lib/products";
 import { formatPrice } from "@/lib/shop";
 import { showInShowroom } from "@/lib/showroom";
@@ -11,6 +12,7 @@ import { SectionHeading } from "../ui/SectionHeading";
 import { VariantPicker } from "../ui/VariantPicker";
 
 function ProductVisual({ colors, active, featured }: { colors: Product[]; active: Product; featured: boolean }) {
+  const { l } = useI18n();
   const photos = colors.filter((p) => p.image);
   if (active.image) {
     // ภาพถ่ายพื้นสว่าง วางบนพื้นสีเดียวกับภาพให้กลืนเป็นแผ่นเดียว
@@ -26,7 +28,7 @@ function ProductVisual({ colors, active, featured }: { colors: Product[]; active
             src={p.image!.src}
             width={p.image!.width}
             height={p.image!.height}
-            alt={p.id === active.id ? p.image!.alt : ""}
+            alt={p.id === active.id ? l(p.image!.alt) : ""}
             aria-hidden={p.id !== active.id}
             sizes={featured ? "(min-width: 1024px) 560px, 100vw" : "(min-width: 1024px) 380px, 100vw"}
             className={`col-start-1 row-start-1 mx-auto h-auto w-auto transition duration-500 group-hover:scale-[1.02] ${
@@ -53,6 +55,7 @@ function ProductVisual({ colors, active, featured }: { colors: Product[]; active
 // การ์ดหนึ่งใบต่อหนึ่งทรง ถ้ามีหลายสีให้กดสลับสีดูภาพได้ในการ์ด
 function StyleCard({ colors, featured, index }: { colors: Product[]; featured: boolean; index: number }) {
   const [active, setActive] = useState(colors[0]);
+  const { t, l } = useI18n();
 
   return (
     <Reveal
@@ -65,7 +68,7 @@ function StyleCard({ colors, featured, index }: { colors: Product[]; featured: b
           <h3 className={featured ? "text-chrome text-3xl font-semibold tracking-tight sm:text-4xl" : "text-lg font-medium"}>
             {active.name}
           </h3>
-          <p className="mt-1.5 text-sm text-mute">{active.fitLabel}</p>
+          <p className="mt-1.5 text-sm text-mute">{l(active.fitLabel)}</p>
           <p className={featured ? "mt-4 text-2xl" : "mt-3 text-sm"}>{formatPrice(active.price)}</p>
         </div>
         {colors.length > 1 && (
@@ -73,9 +76,9 @@ function StyleCard({ colors, featured, index }: { colors: Product[]; featured: b
         )}
         {featured && (
           <>
-            <p className="text-sm leading-relaxed text-fg/75">{active.description}</p>
+            <p className="text-sm leading-relaxed text-fg/75">{l(active.description)}</p>
             <ul className="space-y-1.5 border-t border-white/8 pt-5 text-sm text-mute">
-              {active.details.map((detail) => (
+              {l(active.details).map((detail) => (
                 <li key={detail} className="flex gap-2">
                   <span aria-hidden className="text-fg/40">—</span>
                   {detail}
@@ -90,7 +93,7 @@ function StyleCard({ colors, featured, index }: { colors: Product[]; featured: b
             onClick={() => showInShowroom(active.id)}
             className={featured ? "btn-primary" : "btn-ghost py-2! text-xs!"}
           >
-            ดูแบบ 3D และเลือกไซซ์
+            {t.collection.view}
           </button>
         </div>
       </div>
@@ -100,14 +103,15 @@ function StyleCard({ colors, featured, index }: { colors: Product[]; featured: b
 
 export function Collection() {
   const styles = productStyles();
+  const { t } = useI18n();
   // ไม่เกิน 2 ทรงแสดงเป็นการ์ดใหญ่เรียงลงมา มากกว่านั้นเรียงเป็นตาราง
   const featured = styles.length <= 2;
 
   return (
     <section id="collection" className="mx-auto max-w-6xl scroll-mt-24 px-5 py-24 sm:py-32">
       <Reveal>
-        <SectionHeading badge="New Arrival" title="คอลเลกชันล่าสุด">
-          ดูภาพด้านหน้าและด้านหลัง แล้วกดดูแบบ 3D เพื่อหมุนดูทุกมุมก่อนตัดสินใจ
+        <SectionHeading badge={t.collection.badge} title={t.collection.title}>
+          {t.collection.intro}
         </SectionHeading>
       </Reveal>
       <div className={`mt-14 grid gap-6 ${featured ? "mx-auto max-w-5xl" : "sm:grid-cols-2 lg:grid-cols-3"}`}>

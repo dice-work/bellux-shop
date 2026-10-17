@@ -1,3 +1,5 @@
+import type { Locale } from "@/i18n/config";
+import { dictionaries } from "@/i18n/dictionaries";
 import { displayName, products } from "./products";
 import { formatPrice, shop } from "./shop";
 import type { CartItem } from "./store";
@@ -9,23 +11,25 @@ export function cartLines(items: CartItem[]) {
   });
 }
 
-export function buildOrderMessage(items: CartItem[]) {
+// ข้อความสั่งซื้อใช้ภาษาเดียวกับหน้าเว็บที่ลูกค้าเปิดอยู่
+export function buildOrderMessage(items: CartItem[], locale: Locale) {
+  const t = dictionaries[locale].order;
   const lines = cartLines(items);
   const count = lines.reduce((sum, line) => sum + line.qty, 0);
   const total = lines.reduce((sum, line) => sum + line.subtotal, 0);
 
   return [
-    `สวัสดีค่ะ ขอสั่งซื้อสินค้าจาก ${shop.name}`,
+    t.greeting(shop.name),
     "",
     ...lines.map(
       (line, i) =>
-        `${i + 1}. ${displayName(line.product)} | ไซซ์ ${line.size} | ${line.qty} ตัว | ${formatPrice(line.subtotal)}`,
+        `${i + 1}. ${t.line(displayName(line.product, locale), line.size, line.qty, formatPrice(line.subtotal))}`,
     ),
     "",
-    `รวม ${count} ตัว: ${formatPrice(total)} (ยังไม่รวมค่าจัดส่ง)`,
+    t.total(count, formatPrice(total)),
     "",
-    "ชื่อผู้รับ: ",
-    "ที่อยู่จัดส่ง: ",
-    "เบอร์โทร: ",
+    t.name,
+    t.address,
+    t.phone,
   ].join("\n");
 }

@@ -4,6 +4,7 @@ import { Html } from "@react-three/drei";
 import { useFrame, useThree } from "@react-three/fiber";
 import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
+import { useI18n } from "@/i18n/I18nProvider";
 import { displayName, type Product } from "@/lib/products";
 import { formatPrice } from "@/lib/shop";
 import { useShop } from "@/lib/store";
@@ -20,6 +21,7 @@ export function RackItem({ product, index }: { product: Product; index: number }
   const selected = useShop((state) => state.selectedId === product.id);
   const anySelected = useShop((state) => state.selectedId !== null);
   const select = useShop((state) => state.select);
+  const { locale } = useI18n();
   const canvas = useThree((state) => state.gl.domElement);
   const x = rackX(index);
   const height = jeansHeight(product.fit);
@@ -103,7 +105,7 @@ export function RackItem({ product, index }: { product: Product; index: number }
       {hovered && !anySelected && (
         <Html center position={[0, -height - 0.16, 0]} className="pointer-events-none">
           <div className="whitespace-nowrap rounded-full border border-white/15 bg-black/70 px-3 py-1.5 text-xs text-fg backdrop-blur">
-            {displayName(product)} · {formatPrice(product.price)}
+            {displayName(product, locale)} · {formatPrice(product.price)}
           </div>
         </Html>
       )}

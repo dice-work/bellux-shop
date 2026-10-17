@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useI18n } from "@/i18n/I18nProvider";
 import { displayName, products, type Product } from "@/lib/products";
 import { formatPrice } from "@/lib/shop";
 import { useShop, type CartToast as Toast } from "@/lib/store";
@@ -12,6 +13,7 @@ function ToastCard({ toast, product }: { toast: Toast; product: Product }) {
   const dismiss = useShop((state) => state.dismissToast);
   const setCartOpen = useShop((state) => state.setCartOpen);
   const [hovered, setHovered] = useState(false);
+  const { t, locale } = useI18n();
 
   // ปิดเองหลังไม่กี่วินาที แต่หยุดนับระหว่างเอาเมาส์ชี้ เพื่อให้กด "ดูตะกร้า" ทัน
   useEffect(() => {
@@ -31,9 +33,9 @@ function ToastCard({ toast, product }: { toast: Toast; product: Product }) {
         <Sparkle className="h-3.5 w-3.5 text-white/80" />
       </span>
       <div className="min-w-0 flex-1">
-        <p className="text-sm font-medium">เพิ่มลงตะกร้าแล้ว</p>
+        <p className="text-sm font-medium">{t.toast.added}</p>
         <p className="truncate text-xs text-mute">
-          {displayName(product)} · ไซซ์ {toast.size} · {formatPrice(product.price)}
+          {displayName(product, locale)} · {t.cart.size(toast.size)} · {formatPrice(product.price)}
         </p>
       </div>
       <button
@@ -44,11 +46,11 @@ function ToastCard({ toast, product }: { toast: Toast; product: Product }) {
         }}
         className="btn-primary shrink-0 px-3.5! py-2! text-xs!"
       >
-        ดูตะกร้า
+        {t.toast.view}
       </button>
       <button
         type="button"
-        aria-label="ปิดการแจ้งเตือน"
+        aria-label={t.toast.close}
         onClick={dismiss}
         className="grid h-8 w-8 shrink-0 place-items-center rounded-full text-mute hover:text-fg"
       >

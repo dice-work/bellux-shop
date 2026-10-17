@@ -1,3 +1,6 @@
+"use client";
+
+import { useI18n } from "@/i18n/I18nProvider";
 import { displayName, products, sizes } from "@/lib/products";
 import { formatPrice } from "@/lib/shop";
 import { Reveal } from "../ui/Reveal";
@@ -5,6 +8,7 @@ import { SectionHeading } from "../ui/SectionHeading";
 import { Sparkle } from "../ui/Sparkle";
 
 function FitList() {
+  const { locale } = useI18n();
   return (
     <ul className="space-y-1.5 text-xs">
       {products.map((product, i) => (
@@ -15,7 +19,7 @@ function FitList() {
           }`}
         >
           <span className="h-2.5 w-2.5 rounded-full" style={{ background: product.color }} />
-          {displayName(product)}
+          {displayName(product, locale)}
         </li>
       ))}
     </ul>
@@ -51,6 +55,7 @@ function SizeGrid() {
 }
 
 function ChatPreview() {
+  const { t, locale } = useI18n();
   return (
     <div className="rounded-xl border border-white/10 bg-black/60 p-3 font-mono text-[11px] leading-relaxed text-mute">
       <div className="mb-2 flex gap-1.5">
@@ -58,27 +63,26 @@ function ChatPreview() {
         <span className="h-2 w-2 rounded-full bg-white/20" />
         <span className="h-2 w-2 rounded-full bg-white/20" />
       </div>
-      <p className="text-fg">ขอสั่งซื้อสินค้า</p>
-      <p>1. {displayName(products[0])} | ไซซ์ 27 | 1 ตัว</p>
-      <p>รวม: {formatPrice(products[0].price)}</p>
-      <p className="text-white/40">ชื่อผู้รับ: _</p>
+      <p className="text-fg">{t.how.chatTitle}</p>
+      <p>1. {t.order.line(displayName(products[0], locale), "27", 1, formatPrice(products[0].price))}</p>
+      <p>
+        {t.how.chatTotal}: {formatPrice(products[0].price)}
+      </p>
+      <p className="text-white/40">{t.order.name}_</p>
     </div>
   );
 }
 
-const steps = [
-  { title: "หยิบจากราว", text: "แตะกางเกงบนราวในโชว์รูมเพื่อหยิบมาดูใกล้ๆ", visual: <FitList /> },
-  { title: "หมุนดูรอบตัว", text: "ลากเพื่อหมุนดูทั้งด้านหน้า ด้านหลัง และกระเป๋า", visual: <Orbit /> },
-  { title: "เลือกไซซ์", text: "เลือกไซซ์เอวแล้วเพิ่มลงตะกร้า", visual: <SizeGrid /> },
-  { title: "ส่งออเดอร์ในแชต", text: "คัดลอกข้อความสั่งซื้อไปวางใน LINE หรือ IG", visual: <ChatPreview /> },
-];
+const visuals = [<FitList key="fit" />, <Orbit key="orbit" />, <SizeGrid key="size" />, <ChatPreview key="chat" />];
 
 export function HowItWorks() {
+  const { t } = useI18n();
+  const steps = t.how.steps.map((step, i) => ({ ...step, visual: visuals[i] }));
   return (
     <section id="how" className="mx-auto max-w-6xl scroll-mt-24 px-5 py-24 sm:py-32">
       <Reveal>
-        <SectionHeading badge="เลือก • หมุน • ใส่ตะกร้า • ส่งแชต" title="ช้อปยีนส์ใน 4 ขั้นตอน">
-          ไม่ต้องสมัครสมาชิก ไม่ต้องกรอกฟอร์ม เลือกเสร็จแล้วคุยกับร้านในแชตได้เลย
+        <SectionHeading badge={t.how.badge} title={t.how.title}>
+          {t.how.intro}
         </SectionHeading>
       </Reveal>
       <div className="mt-14 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
